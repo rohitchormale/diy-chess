@@ -1,0 +1,152 @@
+<html>
+
+<head>
+<style>
+    tr:nth-child(even) td:nth-child(odd){
+        background: #e4e4e4;
+    }
+    tr:nth-child(odd) td:nth-child(even) {
+        background: #e4e4e4;
+    }
+    .board-square {
+        height: 50px;
+        width: 50px;
+        font-size: 50px;
+        text-align: center;
+    }
+</style>
+
+
+</head>
+
+<body>
+
+    <div id="chessboard">
+    </div>
+
+    <div id="foo" baz="x"></div>
+
+    <script type="text/javascript" src="helper.js"></script>
+
+    <script>
+        var ranks = ['1', '2', '3', '4', '5', '6', '7', '8']
+        var files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+        var positions = function () {
+            var temp = []
+            for (let i=0;i<8;i++) {
+                for (let j=0;j<8;j++) {
+                    temp.push(files[i]+ranks[j])
+                }
+            }
+            return temp
+        }()
+        var unicodes = {
+            wking: '&#9812;',
+            wqueen: '&#9813;',
+            wrook: '&#9814;',
+            wbishop: '&#9815;',
+            wknight: '&#9816;',
+            wpawn: '&#9817;',
+            bking: '&#9818;',
+            bqueen: '&#9819;',
+            brook: '&#9820;',
+            bbishop: '&#9821;',
+            bknight: '&#9822;',
+            bpawn: '&#9823;'
+        }
+        function getInitBoard(top='b', bottom='w') {
+            var board = {}
+            var topBoard = {
+                'a8': 'rook', 'b8': 'knight', 'c8': 'bishop', 'd8': 'queen', 'e8': 'king', 'f8': 'bishop', 'g8': 'knight', 'h8': 'rook',
+                'a7': 'pawn','b7': 'pawn', 'c7': 'pawn', 'd7': 'pawn', 'e7': 'pawn', 'f7': 'pawn', 'g7': 'pawn', 'h7': 'pawn', 'h8': 'pawn'
+            }
+            var bottomBoard = {
+                'a1': 'rook', 'b1': 'knight', 'c1': 'bishop', 'd1': 'queen', 'e1': 'king', 'f1': 'bishop', 'g1': 'knight', 'h1': 'rook',
+                'a2': 'pawn','b2': 'pawn', 'c2': 'pawn', 'd2': 'pawn', 'e2': 'pawn', 'f2': 'pawn', 'g2': 'pawn', 'h2': 'pawn', 'h2': 'pawn'
+            }
+            for (let i in topBoard) {
+                board[i] = top + topBoard[i]
+            }
+            for (let i in bottomBoard) {
+                board[i] = bottom + bottomBoard[i]
+            }
+            return board
+        }
+    
+        function buildBoard(board) {
+            var table = document.createElement('table')
+            table.setAttribute('id', 'board')
+            table.setAttribute('border', 'solid 1px')
+            for (let i in ranks.reverse()) {
+                let row = document.createElement('tr')
+                row.setAttribute('id', 'rank'+ranks[i])
+                for (let j in files) {
+                    let col = document.createElement('td')
+                    col.setAttribute('id', 'pos-'+files[j]+ranks[i])
+                    let pos = files[j]  + ranks[i]
+                    let piece = board.hasOwnProperty(pos) ? board[pos] : ''  
+                    let pieceUnicode = unicodes.hasOwnProperty(piece) ? unicodes[piece] : ''
+                    // div inside td to set height
+
+                    let div = document.createElement('div')
+                    div.classList.add('board-square')
+                    let id = (pieceUnicode) ? 'piece-'+piece+'-'+uuid4() : 'piece-'+uuid4()
+                    div.setAttribute('id', id)
+                    div.setAttribute('draggable', 'true')
+                    div.setAttribute('onDragStart', 'dragStart(event)')
+                    div.setAttribute('ondrop', 'onDrop(event)')
+                    div.setAttribute('ondragover', 'dragOver(event)')
+                    div.innerHTML = pieceUnicode
+
+                    col.appendChild(div)
+                    row.append(col)
+                }
+                table.append(row)
+            }
+            return table
+        }
+    
+        function dragStart(event) {
+            console.log('drag start - ' + event.target.id)
+            event.dataTransfer.setData('text', event.target.id)
+            event.dataTransfer.setData('element', document.getElementById(event.target.id))
+        }
+    
+        function onDrop(event) {
+            var draggedId = event.dataTransfer.getData('text')
+            var draggedElement = document.getElementById(draggedId)
+            var draggedElementParent = draggedElement.parentElement
+            console.log([draggedId, ' on target ', event.target.id].join(" "))
+            console.log(draggedElementParent.id)
+            console.log(draggedElement.id)
+
+            // in case success condition
+            var targetElement = document.getElementById(event.target.id)
+            var targetElementParent = targetElement.parentElement
+            emptyElement(targetElementParent)
+            targetElementParent.append(draggedElement)
+
+            // in case failed condition
+            // emptyElement(draggedElementParent)
+            // draggedElementParent.append(draggedElement)
+            console.log(event.dataTransfer.getData('element'))
+            
+        }
+    
+        function dragOver(event) {
+            console.log('drag over')
+            event.preventDefault();
+        }
+    
+        window.onload = function () {
+            var element = document.getElementById("chessboard")
+            emptyElement(element)
+            element.append(buildBoard(getInitBoard()))
+        }
+    
+    </script>
+</body>
+
+
+
+</html>
