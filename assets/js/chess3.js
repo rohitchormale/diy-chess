@@ -41,8 +41,46 @@ const chess = {
 
     coordinalTraverse: function(pos, direction, steps=props.upperLimit, absolute=false) {
 
-   }
+        var posf = pos[0]
+        var posr = parseInt(pos[1])
+        var allPos = []
 
+        function getPos(posf, posr) {
+            if (allPos.length >= steps) {
+                return allPos
+            }
+            if (direction == 'ltop') {
+                nposf = posf - 1
+                nposr = posr + 1
+                if (nposf < props.lowerLimit || nposr > props.upperLimit) {
+                    return absolute ? [] : allPos
+                }
+            } else if (direction == 'rtop') {
+                nposf = posf + 1
+                nposr = posr + 1
+                if (nposf > props.upperLimit || nposr > props.upperLimit) {
+                    return absolute ? [] : allPos
+                }
+
+            } else if (direction == 'lbottom') {
+                nposf = posf - 1
+                nposr = posr - 1
+                if (nposf < props.lowerLimit || nposr < props.lowerLimit) {
+                    return absolute ? []: allPos
+                }
+
+            } else {
+                nposf = posf + 1
+                nposr = posr - 1
+                if (nposf > props.upperLimit || nposr < props.lowerLimit) {
+                    return absolute ? [] : allPos
+                }
+            }
+            allPos.push(props.rfilemap[nposf]+nposr)
+            return getPos(nposf, nposr)
+        }
+        return getPos(props.filemap[posf], posr)
+   }
    
 }
 
