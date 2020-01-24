@@ -15,7 +15,6 @@ const chess = {
        var allPos = []
 
        function getPos(pos) {
-           // debugger
            if (allPos.length >= steps) {
                return allPos
            }
@@ -43,5 +42,7 @@ const chess = {
     coordinalTraverse: function(pos, direction, steps=props.upperLimit, absolute=false) {
 
    }
+
+   
 }
 
