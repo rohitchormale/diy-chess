@@ -241,7 +241,6 @@ function runTests(name=null) {
     }
 }
 
-runTests('test3')
  
 
 

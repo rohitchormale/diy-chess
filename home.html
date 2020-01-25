@@ -27,6 +27,7 @@
     <div id="foo" baz="x"></div>
 
     <script type="text/javascript" src="assets/js/helper.js"></script>
+    <script type="text/javascript" src="assets/js/chess3.js"></script>
     <script>
         var ranks = ['1', '2', '3', '4', '5', '6', '7', '8']
         var files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
@@ -115,16 +116,27 @@
             var draggedId = event.dataTransfer.getData('text')
             var draggedElement = document.getElementById(draggedId)
             var draggedElementParent = draggedElement.parentElement
-            console.log([draggedId, ' on target ', event.target.id].join(" "))
-            console.log(draggedElementParent.id)
-            console.log(draggedElement.id)
+            var piece = draggedElement.id.split("-")[1]
+            var currentPos = draggedElementParent.id.split('-').slice(-1)[0]
+            var possiblePos = chess.getPossiblePositions(piece.slice(1), currentPos)
 
             // in case success condition
             var targetElement = document.getElementById(event.target.id)
             var targetElementParent = targetElement.parentElement
-            emptyElement(targetElementParent)
-            targetElementParent.append(draggedElement)
+            var targetPos = targetElementParent.id.split("-")[1]
 
+            console.log('current pos - ', currentPos)
+            console.log('possibe pos - ', possiblePos)
+            console.log('target pos - ', targetPos)
+
+            if (possiblePos.includes(targetPos)) {
+                console.log('moving')
+                emptyElement(targetElementParent)
+                targetElementParent.append(draggedElement)
+            } else {
+                console.log('not moving')
+
+            }
             // in case failed condition
             // emptyElement(draggedElementParent)
             // draggedElementParent.append(draggedElement)
