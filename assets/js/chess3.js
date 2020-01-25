@@ -154,7 +154,7 @@ const chess = {
            }
 
            nextPos = positions.pop()
-           nextRoute = positions.shift()
+           nextRoute = path.shift()
            return getPos(nextPos[0], parseInt(nextPos[1]), nextRoute, obj)
        }
        if (path && path.length) {
@@ -180,7 +180,6 @@ const chess = {
             // for KNIGHT, we only need endpoints as positions are not sequential
            for (path in props.paths[piece]) {
                var pt = this.compoundTraverse(posf, posr, props.paths[piece][path].slice(0), true)
-               console.log(pt)
                if (pt) allPos.push(pt.slice(-1)[0])
            }
        } else {
@@ -206,19 +205,19 @@ function runTests(name=null) {
         },
         test2: {
             input: ['king', 'c5'],
-            output: ['b6', 'c6', 'd6', 'c7']
+            output: ['b4', 'b5', 'b6', 'c4', 'c6', 'd4', 'd5', 'd6']
         },
         test3: {
             input: ['queen', 'c5'],
-            output: ['b6', 'c6', 'd6', 'c7']
+            output: ['a5', 'b5', 'd5', 'e5', 'f5', 'g5', 'h5', 'c1', 'c2', 'c3', 'c4', 'c6', 'c7', 'c8', 'a3', 'b4', 'd6', 'e7', 'f8', 'a7', 'b6', 'd4', 'e3', 'f2', 'g1']
         },
         test4: {
             input: ['bishop', 'c5'],
-            output: ['b6', 'c6', 'd6', 'c7']
+            output: ['a3', 'b4', 'd6', 'e7', 'f8', 'a7', 'b6', 'd4', 'e3', 'f2', 'g1']
         },
         test5: {
             input: ['rook', 'c5'],
-            output: ['b6', 'c6', 'd6', 'c7']
+            output: ['a5', 'b5', 'd5', 'e5', 'f5', 'g5', 'h5', 'c1', 'c2', 'c3', 'c4', 'c6', 'c7', 'c8']
         },
         test6: {
             input: ['knight', 'c5'],
@@ -232,7 +231,6 @@ function runTests(name=null) {
             var input = tests[name]['input']
             var output = tests[name]['output']
             var resp = chess.getPossiblePositions(input[0], input[1])
-console.log(name, input, output, resp)
             console.log(name, input, output, resp, (output.sort().toString() == resp.sort().toString()))
         }
     } else {
@@ -243,7 +241,7 @@ console.log(name, input, output, resp)
     }
 }
 
-runTests('test6')
+runTests('test3')
  
 
 
