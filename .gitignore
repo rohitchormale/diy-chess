@@ -13,3 +13,4 @@ gunicorn_config.py
 .coverage
 coverage.xml
 backup/*
+
