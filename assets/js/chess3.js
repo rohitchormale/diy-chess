@@ -235,30 +235,43 @@ const chess = {
 
 function runTests(name=null) {
     var tests = {
+        // getPossiblePositions test
         test1: {
             input: ['pawn', 'c5'],
-            output: ['b6', 'c6', 'd6', 'c7']
+            output: ['b6', 'c6', 'd6', 'c7'],
+            func: chess.getPossiblePositions
         },
         test2: {
             input: ['king', 'c5'],
-            output: ['b4', 'b5', 'b6', 'c4', 'c6', 'd4', 'd5', 'd6']
+            output: ['b4', 'b5', 'b6', 'c4', 'c6', 'd4', 'd5', 'd6'],
+            func: chess.getPossiblePositions
         },
         test3: {
             input: ['queen', 'c5'],
-            output: ['a5', 'b5', 'd5', 'e5', 'f5', 'g5', 'h5', 'c1', 'c2', 'c3', 'c4', 'c6', 'c7', 'c8', 'a3', 'b4', 'd6', 'e7', 'f8', 'a7', 'b6', 'd4', 'e3', 'f2', 'g1']
+            output: ['a5', 'b5', 'd5', 'e5', 'f5', 'g5', 'h5', 'c1', 'c2', 'c3', 'c4', 'c6', 'c7', 'c8', 'a3', 'b4', 'd6', 'e7', 'f8', 'a7', 'b6', 'd4', 'e3', 'f2', 'g1'],
+            func: chess.getPossiblePositions
         },
         test4: {
             input: ['bishop', 'c5'],
-            output: ['a3', 'b4', 'd6', 'e7', 'f8', 'a7', 'b6', 'd4', 'e3', 'f2', 'g1']
+            output: ['a3', 'b4', 'd6', 'e7', 'f8', 'a7', 'b6', 'd4', 'e3', 'f2', 'g1'],
+            func: chess.getPossiblePositions
         },
         test5: {
             input: ['rook', 'c5'],
-            output: ['a5', 'b5', 'd5', 'e5', 'f5', 'g5', 'h5', 'c1', 'c2', 'c3', 'c4', 'c6', 'c7', 'c8']
+            output: ['a5', 'b5', 'd5', 'e5', 'f5', 'g5', 'h5', 'c1', 'c2', 'c3', 'c4', 'c6', 'c7', 'c8'],
+            func: chess.getPossiblePositions
         },
         test6: {
             input: ['knight', 'c5'],
-            output: ['b7', 'd7', 'a6', 'e6', 'b3', 'd3', 'e4', 'a4']
+            output: ['b7', 'd7', 'a6', 'e6', 'b3', 'd3', 'e4', 'a4'],
+            func: chess.getPossiblePositions
         },
+
+        // getValidPositions test
+        test8: {
+
+        },
+
     }
 
     if (!name) {
@@ -266,13 +279,13 @@ function runTests(name=null) {
             console.log("Starting new test...", name)
             var input = tests[name]['input']
             var output = tests[name]['output']
-            var resp = chess.getPossiblePositions(input[0], input[1])
+            var resp = tests[name][func](...input)
             console.log(name, input, output, resp, (output.sort().toString() == resp.sort().toString()))
         }
     } else {
         var input = tests[name]['input']
         var output = tests[name]['output']
-        var resp = chess.getPossiblePositions(input[0], input[1])
+        var resp = tests[name]['func'](...input)
         console.log(name, input, output, resp, (output.sort().toString() == resp.sort().toString()))
     }
 }
