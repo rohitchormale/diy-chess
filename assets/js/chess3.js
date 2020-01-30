@@ -1,4 +1,43 @@
 // board details
+const defaultBoard = {
+    bqr: 'a8',
+    bqn: 'b8',
+    bqb: 'c8',
+    bq: 'd8',
+    bk: 'e8',
+    bkb: 'f8',
+    bkn: 'g8',
+    bkr: 'h8',
+
+    bqrp: 'a7',
+    bqnp: 'b7',
+    bqbp: 'c7',
+    bqp: 'd7',
+    bkp: 'e7',
+    bkbp: 'f7',
+    bknp: 'g7',
+    bkrp: 'h7',
+
+    wqr: 'a1',
+    wqn: 'b1',
+    wqb: 'c1',
+    wq: 'd1',
+    wk: 'e1',
+    wkb: 'f1',
+    wkn: 'g1',
+    wkr: 'h1',
+
+    wqrp: 'a2',
+    wqnp: 'b2',
+    wqbp: 'c2',
+    wqp: 'd2',
+    wkp: 'e2',
+    wkbp: 'f2',
+    wknp: 'g2',
+    wkrp: 'h2',
+
+}
+
 const props = {
     lowerLimit: 1,
     upperLimit: 8,
@@ -191,9 +230,6 @@ const chess = {
        return Array.from(new Set(allPos)) 
    },
 
-   getValidPostions: function(piece, positions, board) {
-
-   }
 }
 
 
@@ -240,8 +276,4 @@ function runTests(name=null) {
         console.log(name, input, output, resp, (output.sort().toString() == resp.sort().toString()))
     }
 }
-
- 
-
-
 
