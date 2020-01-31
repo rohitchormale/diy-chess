@@ -169,7 +169,7 @@ const chess = {
 
    compoundTraverse: function(posf, posr, path, absolute=false) {
        var allPos = []
-       function getPos(posf, posr, route, obj) {
+       function getPos(posf, posr, route) {
            try {
                var direction = route[0]
                var steps = route[1]
@@ -178,9 +178,9 @@ const chess = {
            }
 
            if (direction == 'top' || direction == 'bottom' || direction == 'left' || direction == 'right') {
-               var positions  = obj.linearTraverse(posf, posr, direction, steps, absolute)
+               var positions  = chess.linearTraverse(posf, posr, direction, steps, absolute)
            } else {
-               var positions = obj.coordinalTraverse(posf, posr, direction, steps, absolute)
+               var positions = chess.coordinalTraverse(posf, posr, direction, steps, absolute)
            }
 
            if (positions && positions.length == 0) {
@@ -194,10 +194,10 @@ const chess = {
 
            nextPos = positions.pop()
            nextRoute = path.shift()
-           return getPos(nextPos[0], parseInt(nextPos[1]), nextRoute, obj)
+           return getPos(nextPos[0], parseInt(nextPos[1]), nextRoute)
        }
        if (path && path.length) {
-           return getPos(posf, posr, path.shift(), this)
+           return getPos(posf, posr, path.shift())
        }
        return []
    }, 
@@ -315,11 +315,9 @@ function runTests(name=null) {
 
         // getValidPositions test
         test8: {
-            input: ['pawn', 'b2', defaultBoard, 'a2'],
+            input: ['wqrp', 'b2', defaultBoard, 'a2'],
             output: false,
-            func: function() {
-                return chess.validatePositions
-            }
+            func: chess.validatePositions
         },
 
     }
@@ -340,7 +338,7 @@ function runTests(name=null) {
     if (name) {
         var input = tests[name]['input']
         var output = tests[name]['output']
-        var resp = tests[name]['func']()(...input)
+        var resp = tests[name]['func'](...input)
         results(name, input, output, resp)
     } else {
         for (let name in tests) {
@@ -355,4 +353,5 @@ function runTests(name=null) {
 
 }
 
-runTests('test8')
+// runTests('test8')
+runTests()
