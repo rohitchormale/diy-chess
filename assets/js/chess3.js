@@ -218,17 +218,63 @@ const chess = {
        if (piece == 'knight') {
             // for KNIGHT, we only need endpoints as positions are not sequential
            for (path in props.paths[piece]) {
-               var pt = this.compoundTraverse(posf, posr, props.paths[piece][path].slice(0), true)
+               var pt = chess.compoundTraverse(posf, posr, props.paths[piece][path].slice(0), true)
                if (pt) allPos.push(pt.slice(-1)[0])
            }
        } else {
            for (path in props.paths[piece]) {
-               var pt = this.compoundTraverse(posf, posr, props.paths[piece][path].slice(0), false)
+               var pt = chess.compoundTraverse(posf, posr, props.paths[piece][path].slice(0), false)
                allPos = allPos.concat(pt)
            }
        }
        return Array.from(new Set(allPos)) 
    },
+
+   validatePositions: function(piece, currentPos, board, targetPos) {
+       // get possible positions
+       if (piece.charAt(piece.length-1) == 'p') {
+           var possiblePossitions = chess.getPossiblePositions('pawn', currentPos)
+       } else if (piece.charAt(piece.length-1) == 'r') {
+           var possiblePossitions = chess.getPossiblePositions('rook', currentPos)
+       } else if (piece.charAt(piece.length-1) == 'n') {
+           var possiblePossitions = chess.getPossiblePositions('knight', currentPos)
+       } else if (piece.charAt(piece.length-1) == 'b') {
+           var possiblePossitions = chess.getPossiblePositions('bishop', currentPos)
+       } else if (piece.charAt(piece.length-1) == 'q') {
+           var possiblePossitions = chess.getPossiblePositions('queen', currentPos)
+       } else if (piece.charAt(piece.length-1) == 'k') {
+           var possiblePossitions = chess.getPossiblePositions('king', currentPos)
+       } else {
+           console.log("Invalid piece")
+           return false
+       } 
+
+       // check if targetPos is valid possible position
+       if (!possiblePossitions.includes(targetPos)) {
+           return false
+       }
+       // check if piece from own side not there
+       var targetPosPiece = board[targetPos]
+       if (targetPosPiece && targetPosPiece.starsWith(piece.chartAt(0))) {
+           return false
+       }
+       // pawn has a special case, pawn can't move coorodianl if another piece not present there
+       // check if piece is pawn
+       // && check if target pos is diagonal by checking files are different
+       // && check if any piece there from opposite side, we are already ruling out piece with same side, so just check if piece is prsent
+       if (piece.chartAt(piece.length-1) == 'p' && currentPos.charAt(0) != targetPos.chartAt(0) && !targetPosPiece) {
+           return false
+       }
+       return true
+   }, 
+
+   checkForCheckmate: function() {
+       // check if possible side's king is in danger
+   },
+
+   checkForOwnmate: function() {
+       // check if own king is in danger
+   }
 
 }
 
@@ -269,24 +315,44 @@ function runTests(name=null) {
 
         // getValidPositions test
         test8: {
-
+            input: ['pawn', 'b2', defaultBoard, 'a2'],
+            output: false,
+            func: function() {
+                return chess.validatePositions
+            }
         },
 
     }
 
-    if (!name) {
+    function results(name, input, output, resp) {
+        // todo add support for all datatypes
+        console.log('output - ')
+        console.log(output)
+        if (Array.isArray(output) && Array.isArray(resp)) {
+            console.log("Name - ", name, " | Input - ", input, " | Output - ", output, " | Resp - ", resp, " | Result -", (output.sort().toString() == resp.sort().toString()))
+        } else if (typeof output === 'boolean' && typeof resp === 'boolean') {
+            console.log("Name - ", name, " | Input - ", input, " | Output - ", output, " | Resp - ", resp, " | Result -", output == resp)
+        } else {
+            console.log("Name - ", name, " | Input - ", input, " | Output - ", output, " | Resp - ", resp, " | Result -", output == resp)
+        }
+    }
+
+    if (name) {
+        var input = tests[name]['input']
+        var output = tests[name]['output']
+        var resp = tests[name]['func']()(...input)
+        results(name, input, output, resp)
+    } else {
         for (let name in tests) {
             console.log("Starting new test...", name)
             var input = tests[name]['input']
             var output = tests[name]['output']
-            var resp = tests[name][func](...input)
-            console.log(name, input, output, resp, (output.sort().toString() == resp.sort().toString()))
+            var resp = tests[name]['func'](...input)
+            results(name, input, output, resp)
         }
-    } else {
-        var input = tests[name]['input']
-        var output = tests[name]['output']
-        var resp = tests[name]['func'](...input)
-        console.log(name, input, output, resp, (output.sort().toString() == resp.sort().toString()))
+
     }
+
 }
 
+runTests('test8')
