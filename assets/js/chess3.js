@@ -35,8 +35,17 @@ const defaultBoard = {
     wkbp: 'f2',
     wknp: 'g2',
     wkrp: 'h2',
-
 }
+
+const rDefaultBoard = function() {
+    let obj = {}
+    for (let i in defaultBoard) {
+        obj[defaultBoard[i]] = i
+    }
+    return obj
+}()
+
+
 
 const props = {
     lowerLimit: 1,
@@ -255,14 +264,15 @@ const chess = {
        }
        // check if piece from own side not there
        var targetPosPiece = board[targetPos]
-       if (targetPosPiece && targetPosPiece.starsWith(piece.chartAt(0))) {
+       if (targetPosPiece && targetPosPiece.startsWith(piece.charAt(0))) {
            return false
        }
+
        // pawn has a special case, pawn can't move coorodianl if another piece not present there
        // check if piece is pawn
        // && check if target pos is diagonal by checking files are different
        // && check if any piece there from opposite side, we are already ruling out piece with same side, so just check if piece is prsent
-       if (piece.chartAt(piece.length-1) == 'p' && currentPos.charAt(0) != targetPos.chartAt(0) && !targetPosPiece) {
+       if (piece.charAt(piece.length-1) == 'p' && currentPos.charAt(0) != targetPos.charAt(0) && !targetPosPiece) {
            return false
        }
        return true
@@ -354,4 +364,4 @@ function runTests(name=null) {
 }
 
 // runTests('test8')
-runTests()
+// runTests()

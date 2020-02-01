@@ -5,6 +5,13 @@ function emptyElement(element) {
     }
 }
 
+function setAttributes(element, attrs) {
+    for (let key in attrs) {
+        element.setAttribute(key, attrs[key])
+    }
+    return element
+}
+
 function createQueryString(params) {
     var temp = []
     for (let i in params) {
