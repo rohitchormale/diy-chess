@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chess</title>
+
+    <style>
+        tr:nth-child(even) td:nth-child(odd){
+            background: #e4e4e4;
+        }
+        tr:nth-child(odd) td:nth-child(even) {
+            background: #e4e4e4;
+        }
+        .board-square {
+            height: 50px;
+            width: 50px;
+            font-size: 50px;
+            text-align: center;
+        }
+    </style>
+
+
+</head>
+<body>
+
+    <div id="chessboard">
+    </div>
+
+    <script type="text/javascript" src="assets/js/chess3.js"></script>
+    <script type="text/javascript" src="assets/js/helper.js"></script>
+    <script>
+        var pieceImages = {
+            bqr: '&#9820;',
+            bqn: '&#9822;',
+            bqb: '&#9821;',
+            bq: '&#9819;',
+            bk: '&#9818;',
+            bkb: '&#9821;',
+            bkn: '&#9822;',
+            bkr: '&#9820;',
+
+            bqrp: '&#9823;',
+            bqnp: '&#9823;', 
+            bqbp: '&#9823;', 
+            bqp: '&#9823;', 
+            bkp: '&#9823;', 
+            bkbp: '&#9823;', 
+            bknp: '&#9823;', 
+            bkrp: '&#9823;', 
+
+            wqr: '&#9814;',
+            wqn: '&#9816;',
+            wqb: '&#9815;',
+            wq: '&#9813;',
+            wk: '&#9812;',
+            wkb: '&#9815;',
+            wkn: '&#9816;',
+            wkr: '&#9814;',
+
+            wqrp: '&#9817;',
+            wqnp: '&#9817;', 
+            wqbp: '&#9817;', 
+            wqp: '&#9817;', 
+            wkp: '&#9817;', 
+            wkbp: '&#9817;', 
+            wknp: '&#9817;', 
+            wkrp: '&#9817;', 
+
+        }
+        var currentBoard = Object.assign(rDefaultBoard)
+
+        function dragStart(event) {
+            event.dataTransfer.setData('elementId', event.target.id)
+        }
+
+        function dragOver(event) {
+            event.preventDefault()
+        }
+
+        function onDrop(event) {
+            var element = document.getElementById(event.dataTransfer.getData('elementId'))
+            var piece = element.getAttribute('piece')
+            var currentPos = element.getAttribute('position') 
+            var targetPos = event.target.getAttribute('position')
+            console.log(piece, currentPos, targetPos, ' | ', chess.validatePositions(piece, currentPos, board, targetPos))
+            if (chess.validatePositions(piece, currentPos, currentBoard, targetPos)) {
+                element.setAttribute('piece', '')
+                element.innerHTML = ''
+                event.target.setAttribute('piece', piece)
+                event.target.innerHTML = pieceImages[piece] 
+                delete currentBoard[currentPos]
+                currentBoard[targetPos] = piece
+            }
+        }
+
+        function drawBoard(board) {
+            var files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+            var ranks = ['1', '2', '3', '4', '5', '6', '7', '8']
+            var table = document.createElement('table')
+            setAttributes(table, {
+                id: 'board',
+                border: 'solid 1px;'
+            })
+            for (let i of ranks.reverse()) {
+                var tr = document.createElement('tr')
+                for (let j of files) {
+                    var position = j+i
+                    var piece = (board.hasOwnProperty(j+i)) ? board[j+i] : ''
+                    var td = document.createElement('td')
+                    setAttributes(td, {
+                        // id: 'cell-'+position,
+                        position: position
+                    })
+                    // div inside td to set height
+                    var div = document.createElement('div')
+                    setAttributes(div, {
+                        id: j+i,
+                        // id: 'piece-'+uuid4(),
+                        position: j+i,
+                        piece: piece,
+                        draggable: true,
+                        onDragStart: 'dragStart(event)',
+                        ondrop: 'onDrop(event)',
+                        ondragover: 'dragOver(event)'
+                    })
+                    div.innerHTML = (piece == '') ? '' : pieceImages[piece]
+                    div.classList.add('board-square')
+                    td.append(div)
+                    tr.append(td)
+                }
+                table.append(tr)
+            }
+            console.log(table)
+            return table
+        }
+
+        window.onload = function() {
+            var element = document.getElementById('chessboard')
+            emptyElement(element)
+            element.append(drawBoard(currentBoard))
+        }
+        
+        
+    </script>        
+
+
+    
+</body>
+
+</html>
